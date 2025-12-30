@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing Node.js and dependencies..."
+      - curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+      - sudo apt-get install -y nodejs
+      - npm install
+  build:
+    commands:
+      - echo "Running Webpack build..."
+      - npm run build
+  post_build:
+    commands:
+      - echo "Deploying build artifacts to Nginx..."
+      - sudo cp public/index.html /var/www/html/
+      - sudo cp dist/bundle.js /var/www/html/
+      - sudo systemctl restart nginx
+artifacts:
+  files:
+    - dist/*
+    - public/index.html
+
